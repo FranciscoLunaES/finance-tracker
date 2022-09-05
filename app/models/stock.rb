@@ -5,7 +5,11 @@ class Stock < ApplicationRecord
       secret_token: 'secret_token',
       endpoint: 'https://cloud.iexapis.com/v1'
     )
-    stock = client.quote(ticker_symbol)
-    new(ticker: ticker_symbol, name: stock.company_name, last_price: stock.latest_price)
+    begin
+      stock = client.quote(ticker_symbol)
+      new(ticker: ticker_symbol, name: stock.company_name, last_price: stock.latest_price)
+    rescue StandardError => e
+      nil
+    end
   end
 end
